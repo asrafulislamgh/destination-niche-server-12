@@ -17,7 +17,7 @@ const client = new MongoClient(uri, {
 });
 
 app.get("/", (req, res) => {
-  res.send("Database is working");
+  res.send("I am testing db");
 });
 async function run() {
   try {
