@@ -33,6 +33,17 @@ async function run() {
       res.json(result);
     });
 
+    // My order getting
+    app.get("/orders", async (req, res) => {
+      const email = req.query.email;
+      const query = { email: email };
+      const cursor = orderCollection.find(query);
+      const result = await cursor.toArray();
+      console.log(cursor);
+      // console.log(result);
+      res.json(result);
+    });
+
     // POST API
     app.post("/orders", async (req, res) => {
       const user = req.body;
