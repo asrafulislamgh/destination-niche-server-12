@@ -24,11 +24,20 @@ async function run() {
     await client.connect();
     const database = client.db("destination_db");
     const serviceCollection = database.collection("services");
+    const orderCollection = database.collection("orders");
 
     // GET API
     app.get("/properties", async (req, res) => {
       const cursor = serviceCollection.find({});
       const result = await cursor.toArray();
+      res.json(result);
+    });
+
+    // POST API
+    app.post("/orders", async (req, res) => {
+      const user = req.body;
+      const result = await orderCollection.insertOne(user);
+      console.log(result);
       res.json(result);
     });
   } finally {
