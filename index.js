@@ -27,10 +27,16 @@ async function run() {
     const serviceCollection = database.collection("services");
     const orderCollection = database.collection("orders");
     const userCollection = database.collection("users");
+    const reviewCollection = database.collection("reviews");
 
     // GET API
     app.get("/properties", async (req, res) => {
       const cursor = serviceCollection.find({});
+      const result = await cursor.toArray();
+      res.json(result);
+    });
+    app.get("/reviews", async (req, res) => {
+      const cursor = reviewCollection.find({});
       const result = await cursor.toArray();
       res.json(result);
     });
@@ -42,27 +48,28 @@ async function run() {
       console.log(result);
     });
 
-    // My order getting
-    app.get("/orders", async (req, res) => {
-      const email = req.query.email;
-      let query, cursor, result;
-      if (email) {
-        query = { email: email };
-        cursor = orderCollection.find(query);
-        result = await cursor.toArray();
-      } else {
-        cursor = orderCollection.find({});
-        result = await cursor.toArray();
+    app.get("/users/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const user = await userCollection.findOne(query);
+      let isAdmin = false;
+      if (user?.role === "admin") {
+        isAdmin = true;
       }
-      console.log(cursor);
-      // console.log(result);
-      res.json(result);
+      res.json({ admin: isAdmin });
     });
 
     // POST API
     app.post("/orders", async (req, res) => {
       const user = req.body;
       const result = await orderCollection.insertOne(user);
+      console.log(result);
+      res.json(result);
+    });
+
+    app.post("/reviews", async (req, res) => {
+      const review = req.body;
+      const result = await reviewCollection.insertOne(review);
       console.log(result);
       res.json(result);
     });
