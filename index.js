@@ -89,6 +89,12 @@ async function run() {
       console.log(result);
       res.json(result);
     });
+    app.post("/properties", async (req, res) => {
+      const property = req.body;
+      const result = await serviceCollection.insertOne(property);
+      console.log(result);
+      res.json(result);
+    });
     app.put("/users", async (req, res) => {
       const user = req.body;
       const filter = { email: user.email };
@@ -109,6 +115,12 @@ async function run() {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await orderCollection.deleteOne(query);
+      res.send(result);
+    });
+    app.delete("/properties/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await serviceCollection.deleteOne(query);
       res.send(result);
     });
 
